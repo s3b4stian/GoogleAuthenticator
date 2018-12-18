@@ -16,62 +16,152 @@ namespace PHPGangsta\Tests;
 
 use PHPGangsta\GoogleAuthenticator;
 use PHPUnit\Framework\TestCase;
+use RangeException;
 
+/**
+ * Google Authenticator Tests
+ */
 class GoogleAuthenticatorTest extends TestCase
 {
-    /* @var $googleAuthenticator PHPGangsta_GoogleAuthenticator */
+    /**
+     * @var GoogleAuthenticator
+     */
     protected $googleAuthenticator;
 
+    /**
+     * Set up.
+     */
     protected function setUp()
     {
         $this->googleAuthenticator = new GoogleAuthenticator();
     }
 
-    public function codeProvider()
+    /**
+     * Code Provider.
+     *
+     * @return array
+     */
+    public function codeProvider(): array
     {
         // Secret, time, code
-        return array(
-            array('SECRET', 0, '200470'),
-            array('SECRET', 1385909245, '780018'),
-            array('SECRET', 1378934578, '705013'),
-        );
+        return [
+            ['SECRET', 0, '200470'],
+            ['SECRET', 1385909245, '780018'],
+            ['SECRET', 1378934578, '705013'],
+        ];
     }
 
-    public function testItCanBeInstantiated()
+    /**
+     * Test if class ca be instantiated.
+     *
+     * @return void
+     */
+    public function testItCanBeInstantiated(): void
     {
         $this->assertInstanceOf(GoogleAuthenticator::class, (new GoogleAuthenticator()));
     }
 
-    public function testCreateSecretDefaultsToSixteenCharacters()
+    /**
+     * Test create secret with default sixteen characters key.
+     *
+     * @return void
+     */
+    public function testCreateSecretDefaultsToSixteenCharacters(): void
     {
-        $ga = $this->googleAuthenticator;
-        $secret = $ga->createSecret();
+        $secret = $this->googleAuthenticator->createSecret();
 
         $this->assertEquals(strlen($secret), 16);
     }
 
-    public function testCreateSecretLengthCanBeSpecified()
+    public function invalidLengtProvider(): array
     {
-        $ga = $this->googleAuthenticator;
-
-        for ($secretLength = 16; $secretLength < 100; ++$secretLength) {
-            $secret = $ga->createSecret($secretLength);
-
-            $this->assertEquals(strlen($secret), $secretLength);
-        }
     }
 
     /**
-     * @dataProvider codeProvider
+     * Valid length provider.
+     *
+     * @return array
      */
-    public function testGetCodeReturnsCorrectValues($secret, $timeSlice, $code)
+    public function validLengthProvider(): array
     {
-        $generatedCode = $this->googleAuthenticator->getCode($secret, $timeSlice);
+        $array = [];
 
-        $this->assertEquals($code, $generatedCode);
+        for ($i = 16; $i < 129; $i++) {
+            $array[] = [$i];
+        }
+
+        return $array;
     }
 
-    public function testGetQRCodeGoogleUrlReturnsCorrectUrl()
+    /**
+     * Test create secret with valid secret length.
+     *
+     * @dataProvider validLengthProvider
+     *
+     * @return void
+     */
+    public function testCreateSecretWithValidSecretLength(int $secretLength): void
+    {
+        $this->assertEquals(strlen($this->googleAuthenticator->createSecret($secretLength)), $secretLength);
+    }
+
+    /**
+     * Invalid length provider.
+     *
+     * @return array
+     */
+    public function invalidLengthProvider(): array
+    {
+        return [
+            [12],
+            [13],
+            [14],
+            [15],
+            [129],
+            [130],
+            [131],
+            [132],
+        ];
+    }
+
+    /**
+     * Test create secret with invalid secret length.
+     *
+     * @dataProvider invalidLengthProvider
+     * @expectedException RangeException
+     * @expectedExceptionMessage Bad secret length provided
+     *
+     * @return void
+     */
+    public function testCreateSecretWithInvalidSecretLength(int $secretLength): void
+    {
+        $this->assertEquals(strlen($this->googleAuthenticator->createSecret($secretLength)), $secretLength);
+    }
+
+    /**
+     * Test if getCode returns correct values.
+     *
+     * @dataProvider codeProvider
+     *
+     * @param string $secret
+     * @param int    $timeSlice
+     * @param string $code
+     *
+     * @return void
+     */
+    public function testGetCodeReturnsCorrectValues(string $secret, int $timeSlice, string $code): void
+    {
+        //$generatedCode = $this->googleAuthenticator->getCode($secret, $timeSlice);
+
+        $this->assertEquals($code, $this->googleAuthenticator->getCode($secret, $timeSlice));
+    }
+
+    /**
+     * Test if getQRCodeGoogleUrl returns correct url.
+     *
+     * @return void
+     */
+    public function testGetQRCodeGoogleUrlReturnsCorrectUrl(): void
     {
         $secret = 'SECRET';
         $name = 'Test';
@@ -89,7 +179,12 @@ class GoogleAuthenticatorTest extends TestCase
         $this->assertEquals($queryStringArray['chl'], $expectedChl);
     }
 
-    public function testVerifyCode()
+    /**
+     * Test verifyCode.
+     *
+     * @return void
+     */
+    public function testVerifyCode(): void
     {
         $secret = 'SECRET';
         $code = $this->googleAuthenticator->getCode($secret);
@@ -103,7 +198,12 @@ class GoogleAuthenticatorTest extends TestCase
         $this->assertEquals(false, $result);
     }
 
-    public function testVerifyCodeWithLeadingZero()
+    /**
+     * Test verifyCode with leading zero.
+     *
+     * @return void
+     */
+    public function testVerifyCodeWithLeadingZero(): void
     {
         $secret = 'SECRET';
         $code = $this->googleAuthenticator->getCode($secret);
@@ -115,7 +215,12 @@ class GoogleAuthenticatorTest extends TestCase
         $this->assertEquals(false, $result);
     }
 
-    public function testSetCodeLength()
+    /**
+     * Test SetCodeLength.
+     *
+     * @return void
+     */
+    public function testSetCodeLength(): void
     {
         $this->assertInstanceOf(GoogleAuthenticator::class, $this->googleAuthenticator->setCodeLength(6));
     }

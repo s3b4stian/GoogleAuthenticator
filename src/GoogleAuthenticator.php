@@ -41,7 +41,7 @@ class GoogleAuthenticator
 
         // Valid secret lengths are 80 to 640 bits
         if ($secretLength < 16 || $secretLength > 128) {
-            throw new RangeException('Bad secret length');
+            throw new RangeException('Bad secret length provided');
         }
 
         $secret = '';
@@ -112,7 +112,7 @@ class GoogleAuthenticator
         $level = !empty($params['level']) && array_search($params['level'], ['L', 'M', 'Q', 'H']) !== false ? $params['level'] : 'M';
 
         $urlencoded = urlencode('otpauth://totp/'.$name.'?secret='.$secret.'');
-        
+
         if (!empty($title)) {
             $urlencoded .= urlencode('&issuer='.urlencode($title));
         }
@@ -198,8 +198,10 @@ class GoogleAuthenticator
         $secret = str_split($secret);
 
         $binaryString = '';
-        
-        for ($i = 0; $i < count($secret); $i = $i + 8) {
+
+        $countSecret = count($secret);
+
+        for ($i = 0; $i < $countSecret; $i = $i + 8) {
             $x = '';
 
             if (!in_array($secret[$i], $base32chars)) {
@@ -216,8 +218,9 @@ class GoogleAuthenticator
             }
 
             $eightBits = str_split($x, 8);
+            $countEightBits = count($eightBits);
 
-            for ($z = 0; $z < count($eightBits); ++$z) {
+            for ($z = 0; $z < $countEightBits; ++$z) {
                 $binaryString .= (($y = chr((int)base_convert($eightBits[$z], 2, 10))) || ord($y) == 48) ? $y : '';
             }
         }
