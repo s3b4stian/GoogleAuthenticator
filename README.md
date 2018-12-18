@@ -5,7 +5,11 @@ Google Authenticator PHP class
 * Author: Michael Kliewe, [@PHPGangsta](http://twitter.com/PHPGangsta) and [contributors](https://github.com/PHPGangsta/GoogleAuthenticator/graphs/contributors)
 * Licensed under the BSD License.
 
-[![Build Status](https://travis-ci.org/PHPGangsta/GoogleAuthenticator.png?branch=master)](https://travis-ci.org/PHPGangsta/GoogleAuthenticator)
+[![Build Status](https://travis-ci.org/s3b4stian/GoogleAuthenticator.svg?branch=master)](https://travis-ci.org/s3b4stian/GoogleAuthenticator)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/s3b4stian/GoogleAuthenticator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/s3b4stian/GoogleAuthenticator/?branch=master)
+[![StyleCI](https://github.styleci.io/repos/162298866/shield?branch=master&style=flat)](https://github.styleci.io/repos/162298866)
+[![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat)](https://github.com/php-pds/skeleton)
+[![PHP 7.1](https://img.shields.io/badge/PHP-7.1-8892BF.svg)](http://php.net)
 
 This PHP class can be used to interact with the Google Authenticator mobile app for 2-factor-authentication. This class
 can generate secrets, generate codes, validate codes and present a QR-Code for scanning the secret. It implements TOTP 
@@ -20,6 +24,7 @@ Differences with the original branch:
 * PHP 7.1 support 
 * Strict type checking
 * php-pds/skeleton compliant
+* namespaces added for library and tests
 
 Usage:
 ------
@@ -28,9 +33,11 @@ See following example:
 
 ```php
 <?php
-require_once 'PHPGangsta/GoogleAuthenticator.php';
+include '../GoogleAuthenticator/vendor/autoload.php';
 
-$ga = new PHPGangsta_GoogleAuthenticator();
+use PHPGangsta\GoogleAuthenticator;
+
+$ga = new GoogleAuthenticator();
 $secret = $ga->createSecret();
 echo "Secret is: ".$secret."\n\n";
 
