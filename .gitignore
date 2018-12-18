@@ -1,6 +1,7 @@
-# PHPStorm
-.idea
-
-# Composer
+composer.phar
 composer.lock
-vendor
+clover.xml
+infection-log.txt
+summary-log.txt
+vendor/
+.phan/

@@ -1,32 +1,45 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+/**
+ * PHP Class for handling Google Authenticator 2-factor authentication.
+ * Tests.
+ *
+ * @author Michael Kliewe
+ * @copyright 2012 Michael Kliewe
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ *
+ * @link http://www.phpgangsta.de/
+ */
+declare(strict_types=1);
 
-class GoogleAuthenticatorTest extends PHPUnit_Framework_TestCase
+namespace PHPGangsta\Tests;
+
+use PHPGangsta\GoogleAuthenticator;
+use PHPUnit\Framework\TestCase;
+
+class GoogleAuthenticatorTest extends TestCase
 {
     /* @var $googleAuthenticator PHPGangsta_GoogleAuthenticator */
     protected $googleAuthenticator;
 
     protected function setUp()
     {
-        $this->googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
+        $this->googleAuthenticator = new GoogleAuthenticator();
     }
 
     public function codeProvider()
     {
         // Secret, time, code
         return array(
-            array('SECRET', '0', '200470'),
-            array('SECRET', '1385909245', '780018'),
-            array('SECRET', '1378934578', '705013'),
+            array('SECRET', 0, '200470'),
+            array('SECRET', 1385909245, '780018'),
+            array('SECRET', 1378934578, '705013'),
         );
     }
 
     public function testItCanBeInstantiated()
     {
-        $ga = new PHPGangsta_GoogleAuthenticator();
-
-        $this->assertInstanceOf('PHPGangsta_GoogleAuthenticator', $ga);
+        $this->assertInstanceOf(GoogleAuthenticator::class, (new GoogleAuthenticator()));
     }
 
     public function testCreateSecretDefaultsToSixteenCharacters()
@@ -104,8 +117,6 @@ class GoogleAuthenticatorTest extends PHPUnit_Framework_TestCase
 
     public function testSetCodeLength()
     {
-        $result = $this->googleAuthenticator->setCodeLength(6);
-
-        $this->assertInstanceOf('PHPGangsta_GoogleAuthenticator', $result);
+        $this->assertInstanceOf(GoogleAuthenticator::class, $this->googleAuthenticator->setCodeLength(6));
     }
 }

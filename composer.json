@@ -18,11 +18,23 @@
         "issues": "https://github.com/PHPGangsta/GoogleAuthenticator/issues"
     },
     "require": {
-        "php": ">=5.3"
+        "php": ">=7.1"
     },
-	"autoload": {
-		"classmap": ["PHPGangsta/GoogleAuthenticator.php"]
-	}
+    "require-dev": {
+        "infection/infection": "^0.10",
+        "phpstan/phpstan": "^0.10",
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPGangsta\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PHPGangsta\\Tests\\": "tests/"
+        }
+    }
 }
 
 

@@ -15,6 +15,12 @@ For a secure installation you have to make sure that used codes cannot be reused
 limit the number of verifications, to fight against brute-force attacks. For example you could limit the amount of
 verifications to 10 tries within 10 minutes for one IP address (or IPv6 block). It depends on your environment.
 
+Differences with the original branch:
+-------------------------------------
+* PHP 7.1 support 
+* Strict type checking
+* php-pds/skeleton compliant
+
 Usage:
 ------
 
