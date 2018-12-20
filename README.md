@@ -7,6 +7,7 @@ Google Authenticator PHP class
 
 [![Build Status](https://travis-ci.org/s3b4stian/GoogleAuthenticator.svg?branch=master)](https://travis-ci.org/s3b4stian/GoogleAuthenticator)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/s3b4stian/GoogleAuthenticator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/s3b4stian/GoogleAuthenticator/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/s3b4stian/GoogleAuthenticator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/s3b4stian/GoogleAuthenticator/?branch=master)
 [![StyleCI](https://github.styleci.io/repos/162298866/shield?branch=master&style=flat)](https://github.styleci.io/repos/162298866)
 [![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat)](https://github.com/php-pds/skeleton)
 [![PHP 7.1](https://img.shields.io/badge/PHP-7.1-8892BF.svg)](http://php.net)
@@ -25,6 +26,7 @@ Differences with the original branch:
 * Strict type checking
 * php-pds/skeleton compliant
 * namespaces added for library and tests
+* Google QR code url removed beacause Google QR api are deprecated
 
 Usage:
 ------
@@ -41,9 +43,6 @@ $ga = new GoogleAuthenticator();
 $secret = $ga->createSecret();
 echo "Secret is: ".$secret."\n\n";
 
-$qrCodeUrl = $ga->getQRCodeGoogleUrl('Blog', $secret);
-echo "Google Charts URL for the QR-Code: ".$qrCodeUrl."\n\n";
-
 $oneCode = $ga->getCode($secret);
 echo "Checking Code '$oneCode' and Secret '$secret':\n";
 
@@ -57,8 +56,6 @@ if ($checkResult) {
 Running the script provides the following output:
 ```
 Secret is: OQB6ZZGYHCPSX4AK
-
-Google Charts URL for the QR-Code: https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/infoATphpgangsta.de%3Fsecret%3DOQB6ZZGYHCPSX4AK
 
 Checking Code '848634' and Secret 'OQB6ZZGYHCPSX4AK':
 OK
@@ -85,12 +82,8 @@ Run Tests:
 - All tests are inside `tests` folder.
 - Execute `composer install` and then run the tests from project root
   directory
-- Run as `phpunit tests` from the project root directory
+- Run `phpunit` from the project root directory
 
-
-ToDo:
------
-- ??? What do you need?
 
 Notes:
 ------

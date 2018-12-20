@@ -37,21 +37,6 @@ class GoogleAuthenticatorTest extends TestCase
     }
 
     /**
-     * Code Provider.
-     *
-     * @return array
-     */
-    public function codeProvider(): array
-    {
-        // Secret, time, code
-        return [
-            ['SECRET', 0, '200470'],
-            ['SECRET', 1385909245, '780018'],
-            ['SECRET', 1378934578, '705013'],
-        ];
-    }
-
-    /**
      * Test if class ca be instantiated.
      *
      * @return void
@@ -139,6 +124,21 @@ class GoogleAuthenticatorTest extends TestCase
     }
 
     /**
+     * Code Provider.
+     *
+     * @return array
+     */
+    public function codeProvider(): array
+    {
+        // Secret, time, code
+        return [
+            ['SECRET', 0, '857148'],
+            ['SECRET', 1385909245, '979377'],
+            ['SECRET', 1378934578, '560773'],
+        ];
+    }
+
+    /**
      * Test if getCode returns correct values.
      *
      * @dataProvider codeProvider
@@ -151,32 +151,7 @@ class GoogleAuthenticatorTest extends TestCase
      */
     public function testGetCodeReturnsCorrectValues(string $secret, int $timeSlice, string $code): void
     {
-        //$generatedCode = $this->googleAuthenticator->getCode($secret, $timeSlice);
-
         $this->assertEquals($code, $this->googleAuthenticator->getCode($secret, $timeSlice));
-    }
-
-    /**
-     * Test if getQRCodeGoogleUrl returns correct url.
-     *
-     * @return void
-     */
-    public function testGetQRCodeGoogleUrlReturnsCorrectUrl(): void
-    {
-        $secret = 'SECRET';
-        $name = 'Test';
-        $url = $this->googleAuthenticator->getQRCodeGoogleUrl($name, $secret);
-        $urlParts = parse_url($url);
-
-        parse_str($urlParts['query'], $queryStringArray);
-
-        $this->assertEquals($urlParts['scheme'], 'https');
-        $this->assertEquals($urlParts['host'], 'chart.googleapis.com');
-        $this->assertEquals($urlParts['path'], '/chart');
-
-        $expectedChl = 'otpauth://totp/'.$name.'?secret='.$secret;
-
-        $this->assertEquals($queryStringArray['chl'], $expectedChl);
     }
 
     /**
@@ -187,15 +162,12 @@ class GoogleAuthenticatorTest extends TestCase
     public function testVerifyCode(): void
     {
         $secret = 'SECRET';
-        $code = $this->googleAuthenticator->getCode($secret);
-        $result = $this->googleAuthenticator->verifyCode($secret, $code);
 
-        $this->assertEquals(true, $result);
+        $code = $this->googleAuthenticator->getCode($secret);
+        $this->assertEquals(true, $this->googleAuthenticator->verifyCode($secret, $code));
 
         $code = 'INVALIDCODE';
-        $result = $this->googleAuthenticator->verifyCode($secret, $code);
-
-        $this->assertEquals(false, $result);
+        $this->assertEquals(false, $this->googleAuthenticator->verifyCode($secret, $code));
     }
 
     /**
@@ -206,22 +178,11 @@ class GoogleAuthenticatorTest extends TestCase
     public function testVerifyCodeWithLeadingZero(): void
     {
         $secret = 'SECRET';
+
         $code = $this->googleAuthenticator->getCode($secret);
-        $result = $this->googleAuthenticator->verifyCode($secret, $code);
-        $this->assertEquals(true, $result);
+        $this->assertEquals(true, $this->googleAuthenticator->verifyCode($secret, $code));
 
         $code = '0'.$code;
-        $result = $this->googleAuthenticator->verifyCode($secret, $code);
-        $this->assertEquals(false, $result);
-    }
-
-    /**
-     * Test SetCodeLength.
-     *
-     * @return void
-     */
-    public function testSetCodeLength(): void
-    {
-        $this->assertInstanceOf(GoogleAuthenticator::class, $this->googleAuthenticator->setCodeLength(6));
+        $this->assertEquals(false, $this->googleAuthenticator->verifyCode($secret, $code));
     }
 }
