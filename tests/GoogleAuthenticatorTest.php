@@ -55,7 +55,7 @@ class GoogleAuthenticatorTest extends TestCase
     {
         $secret = $this->googleAuthenticator->createSecret();
 
-        $this->assertEquals(strlen($secret), 16);
+        $this->assertEquals(\strlen($secret), 16);
     }
 
     public function invalidLengtProvider(): array
@@ -87,7 +87,7 @@ class GoogleAuthenticatorTest extends TestCase
      */
     public function testCreateSecretWithValidSecretLength(int $secretLength): void
     {
-        $this->assertEquals(strlen($this->googleAuthenticator->createSecret($secretLength)), $secretLength);
+        $this->assertEquals(\strlen($this->googleAuthenticator->createSecret($secretLength)), $secretLength);
     }
 
     /**
@@ -120,7 +120,7 @@ class GoogleAuthenticatorTest extends TestCase
      */
     public function testCreateSecretWithInvalidSecretLength(int $secretLength): void
     {
-        $this->assertEquals(strlen($this->googleAuthenticator->createSecret($secretLength)), $secretLength);
+        $this->assertEquals(\strlen($this->googleAuthenticator->createSecret($secretLength)), $secretLength);
     }
 
     /**

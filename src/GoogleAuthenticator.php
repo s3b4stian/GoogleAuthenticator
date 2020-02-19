@@ -48,7 +48,7 @@ class GoogleAuthenticator
         }
 
         for ($secret = '', $i = 0; $i < $secretLength; ++$i) {
-            $secret .= substr(self::VALID_CHARS, random_int(0, 31), 1);
+            $secret .= \substr(self::VALID_CHARS, \random_int(0, 31), 1);
         }
 
         return $secret;
@@ -65,29 +65,29 @@ class GoogleAuthenticator
     public function getCode(string $secret, ?int $timeSlice = null): string
     {
         if ($timeSlice === null) {
-            $timeSlice = (int) floor(time() / 30);
+            $timeSlice = (int) \floor(\time() / 30);
         }
 
         $secretkey = base32_decode($secret);
 
         // Pack time into binary string
-        $time = chr(0).chr(0).chr(0).chr(0).pack('N*', $timeSlice);
+        $time = \chr(0).\chr(0).\chr(0).\chr(0).\pack('N*', $timeSlice);
 
         // Hash it with users secret key
-        $hm = hash_hmac('SHA1', $time, $secretkey, true);
+        $hm = \hash_hmac('SHA1', $time, $secretkey, true);
 
         // Use last nipple of result as index/offset
-        $offset = ord(substr($hm, -1)) & 0x0F;
+        $offset = \ord(\substr($hm, -1)) & 0x0F;
 
         // grab 4 bytes of the result
-        $hashpart = substr($hm, $offset, 4);
+        $hashpart = \substr($hm, $offset, 4);
 
         // Unpak binary value and get only 32 bits
-        $value = unpack('N', $hashpart)[1] & 0x7FFFFFFF;
+        $value = \unpack('N', $hashpart)[1] & 0x7FFFFFFF;
 
-        $modulo = pow(10, self::CODE_LENGTH);
+        $modulo = \pow(10, self::CODE_LENGTH);
 
-        return str_pad((string)($value % $modulo), self::CODE_LENGTH, '0', STR_PAD_LEFT);
+        return \str_pad((string)($value % $modulo), self::CODE_LENGTH, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -103,17 +103,17 @@ class GoogleAuthenticator
     public function verifyCode(string $secret, string $code, int $discrepancy = 1, ?int $currentTimeSlice = null): bool
     {
         if ($currentTimeSlice === null) {
-            $currentTimeSlice = (int) floor(time() / 30);
+            $currentTimeSlice = (int) \floor(\time() / 30);
         }
 
-        if (strlen($code) !== 6) {
+        if (\strlen($code) !== 6) {
             return false;
         }
 
         for ($i = -$discrepancy; $i <= $discrepancy; ++$i) {
             $calculatedCode = $this->getCode($secret, $currentTimeSlice + $i);
 
-            if (hash_equals($calculatedCode, $code)) {
+            if (\hash_equals($calculatedCode, $code)) {
                 return true;
             }
         }

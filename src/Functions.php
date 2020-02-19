@@ -13,16 +13,16 @@ function base32_decode(string $data): string
 {
     $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 
-    $data = rtrim($data, "=\x20\t\n\r\0\x0B");
-    $dataSize = strlen($data);
+    $data = \rtrim($data, "=\x20\t\n\r\0\x0B");
+    $dataSize = \strlen($data);
     $buf = 0;
     $bufSize = 0;
     $res = '';
-    $charMap = array_flip(str_split($chars));
+    $charMap = \array_flip(\str_split($chars));
 
-    $dataChars = array_flip(str_split($data));
+    $dataChars = \array_flip(\str_split($data));
 
-    if (count(array_diff_key($dataChars, $charMap)) > 0) {
+    if (\count(\array_diff_key($dataChars, $charMap)) > 0) {
         return '';
     }
 
@@ -36,7 +36,7 @@ function base32_decode(string $data): string
         if ($bufSize > 7) {
             $bufSize -= 8;
             $b = ($buf & (0xff << $bufSize)) >> $bufSize;
-            $res .= chr($b);
+            $res .= \chr($b);
         }
     }
 
